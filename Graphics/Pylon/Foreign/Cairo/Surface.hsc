@@ -6,8 +6,7 @@ import Foreign.Ptr
 import Foreign.C
 import Graphics.Pylon.Foreign.Cairo.Types
 
-type Surface_ = Surface ()
-newtype Surface a = Surface (Ptr Surface_)
+newtype Surface s = Surface (Ptr (Surface s))
 
 newtype Content = Content CInt
 #{ enum Content, Content
@@ -16,65 +15,76 @@ newtype Content = Content CInt
  , contentColorAlpha = CAIRO_CONTENT_COLOR_ALPHA
  }
 
+newtype Format = Format CInt
+#{ enum Format, Format
+ ,  imageFormatInvalid   = CAIRO_FORMAT_INVALID
+ ,  imageFormatArgb32    = CAIRO_FORMAT_ARGB32
+ ,  imageFormatRgb24     = CAIRO_FORMAT_RGB24
+ ,  imageFormatA8        = CAIRO_FORMAT_A8
+ ,  imageFormatA1        = CAIRO_FORMAT_A1
+ ,  imageFormatRgb16_565 = CAIRO_FORMAT_RGB16_565
+ ,  imageFormatRgb30     = CAIRO_FORMAT_RGB30
+ }
+
 foreign import ccall cairo_surface_create_simular
-    :: Ptr Surface_ -> CInt -> CInt -> CInt -> IO (Ptr Surface_)
+    :: Ptr (Surface s) -> Content -> CInt -> CInt -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_surface_create_simular_image
-    :: Ptr Surface_ -> CInt -> CInt -> CInt -> IO (Ptr Surface_)
+    :: Ptr (Surface s) -> Format -> CInt -> CInt -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_surface_create_for_rectangle
-    :: Ptr Surface_ -> CDouble -> CDouble -> CDouble -> CDouble -> IO (Ptr Surface_)
+    :: Ptr (Surface s) -> CDouble -> CDouble -> CDouble -> CDouble -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_surface_reference
-    :: Ptr Surface_ -> IO (Ptr Surface_)
+    :: Ptr (Surface s) -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_surface_destroy
-    :: Ptr Surface_ -> IO ()
+    :: Ptr (Surface s) -> IO ()
 
 foreign import ccall cairo_surface_status
-    :: Ptr Surface_ -> IO CairoStatus
+    :: Ptr (Surface s) -> IO CairoStatus
 
 foreign import ccall cairo_surface_finish
-    :: Ptr Surface_ -> IO ()
+    :: Ptr (Surface s) -> IO ()
 
 foreign import ccall cairo_surface_flush
-    :: Ptr Surface_ -> IO ()
+    :: Ptr (Surface s) -> IO ()
 
 foreign import ccall cairo_surface_get_device
-    :: Ptr Surface_ -> IO (Ptr Device)
+    :: Ptr (Surface s) -> IO (Ptr Device)
 
 foreign import ccall cairo_surface_get_font_options
-    :: Ptr Surface_ -> Ptr FontOptions -> IO ()
+    :: Ptr (Surface s) -> Ptr FontOptions -> IO ()
 
 foreign import ccall cairo_surface_get_content
-    :: Ptr Surface_ -> IO Content
+    :: Ptr (Surface s) -> IO Content
 
 foreign import ccall cairo_surface_mark_dirty
-    :: Ptr Surface_ -> IO ()
+    :: Ptr (Surface s) -> IO ()
 
 foreign import ccall cairo_surface_mark_dirty_rectangle
-    :: Ptr Surface_ -> CInt -> CInt -> CInt -> CInt -> IO ()
+    :: Ptr (Surface s) -> CInt -> CInt -> CInt -> CInt -> IO ()
 
 foreign import ccall cairo_surface_set_device_offset
-    :: Ptr Surface_ -> CDouble -> CDouble -> IO ()
+    :: Ptr (Surface s) -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_surface_get_device_offset
-    :: Ptr Surface_ -> Ptr CDouble -> Ptr CDouble -> IO ()
+    :: Ptr (Surface s) -> Ptr CDouble -> Ptr CDouble -> IO ()
 
 foreign import ccall cairo_surface_get_device_scale
-    :: Ptr Surface_ -> Ptr CDouble -> Ptr CDouble -> IO ()
+    :: Ptr (Surface s) -> Ptr CDouble -> Ptr CDouble -> IO ()
 
 foreign import ccall cairo_surface_set_device_scale
-    :: Ptr Surface_ -> CDouble -> CDouble -> IO ()
+    :: Ptr (Surface s) -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_surface_set_fallback_resolution
-    :: Ptr Surface_ -> CDouble -> CDouble -> IO ()
+    :: Ptr (Surface s) -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_surface_get_fallback_resolution
-    :: Ptr Surface_ -> Ptr CDouble -> Ptr CDouble -> IO ()
+    :: Ptr (Surface s) -> Ptr CDouble -> Ptr CDouble -> IO ()
 
-newtype Surface_Type = Surface_Type CInt
-#{ enum Surface_Type, Surface_Type
+newtype SurfaceType = SurfaceType CInt
+#{ enum SurfaceType, SurfaceType
  ,  surfaceTypeImage          = CAIRO_SURFACE_TYPE_IMAGE
  ,  surfaceTypePdf            = CAIRO_SURFACE_TYPE_PDF
  ,  surfaceTypePs             = CAIRO_SURFACE_TYPE_PS
@@ -103,44 +113,37 @@ newtype Surface_Type = Surface_Type CInt
  }
 
 foreign import ccall cairo_surface_get_type
-    :: Ptr Surface_ -> IO CInt
+    :: Ptr (Surface s) -> IO SurfaceType
 
 foreign import ccall cairo_surface_get_reference_count
-    :: Ptr Surface_ -> IO CUInt
+    :: Ptr (Surface s) -> IO CUInt
 
 foreign import ccall cairo_surface_set_user_data
-    :: UserDataSetter Surface_
+    :: UserDataSetter (Surface s)
 
 foreign import ccall cairo_surface_get_user_data
-    :: UserDataGetter Surface_
+    :: UserDataGetter (Surface s)
 
 foreign import ccall cairo_surface_copy_page
-    :: Ptr Surface_ -> IO ()
+    :: Ptr (Surface s) -> IO ()
 
 foreign import ccall cairo_surface_show_page
-    :: Ptr Surface_ -> IO ()
+    :: Ptr (Surface s) -> IO ()
 
 foreign import ccall cairo_surface_has_show_text_glyphs
-    :: Ptr Surface_ -> IO CBool
+    :: Ptr (Surface s) -> IO CBool
 
 foreign import ccall cairo_surface_set_mime_data
-    :: Ptr Surface_ -> CString -> Ptr CUChar -> CULong -> FunPtr (Ptr a -> IO ()) -> Ptr a -> IO CairoStatus
+    :: Ptr (Surface s) -> CString -> Ptr CUChar -> CULong -> FunPtr (Ptr a -> IO ()) -> Ptr a -> IO CairoStatus
 
 foreign import ccall cairo_surface_get_mime_data
-    :: Ptr Surface_ -> CString -> Ptr (Ptr CUChar) -> Ptr CULong -> IO ()
+    :: Ptr (Surface s) -> CString -> Ptr (Ptr CUChar) -> Ptr CULong -> IO ()
 
 foreign import ccall cairo_surface_supports_mime_type
-    :: Ptr Surface_ -> CString -> IO CBool
+    :: Ptr (Surface s) -> CString -> IO CBool
 
 foreign import ccall cairo_surface_map_to_image
-    :: Ptr Surface_ -> Ptr (Rectangle Int) -> IO (Ptr Surface_)
+    :: Ptr (Surface s) -> Ptr Rectangle -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_surface_unmap_imapge
-    :: Ptr Surface_ -> Ptr Surface_ -> IO ()
-
-
-{-
-foreign import ccall cairo_surface_
-    :: Ptr Surface_ ->
-
--}
+    :: Ptr (Surface s) -> Ptr (Surface s) -> IO ()

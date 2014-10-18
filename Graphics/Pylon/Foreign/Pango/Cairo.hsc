@@ -7,10 +7,10 @@ import Graphics.Pylon.Foreign.Cairo.Cairo
 import Graphics.Pylon.Foreign.Pango.Layout
 
 foreign import ccall pango_cairo_create_layout
-    :: Ptr Cairo -> IO (Ptr Layout)
+    :: Ptr (Cairo s) -> IO (Ptr Layout)
 
 foreign import ccall pango_cairo_update_layout
-    :: Ptr Cairo -> Ptr Layout -> IO ()
+    :: Ptr (Cairo s) -> Ptr Layout -> IO ()
 
 foreign import ccall pango_cairo_show_layout
-    :: Ptr Cairo -> Ptr Layout -> IO ()
+    :: Ptr (Cairo s) -> Ptr Layout -> IO ()

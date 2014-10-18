@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 import Graphics.Pylon.Foreign.Cairo.Types
 
-import Graphics.Pylon.Cairo.Surface.SVG
+import Graphics.Pylon.Cairo.Surface
 import Graphics.Pylon.Cairo.Cairo
 import Graphics.Pylon.Cairo.Path
 
@@ -20,6 +20,6 @@ main = withSVGFile "e1.svg" 300 100 $ \surf -> withCairo surf $ \cairo -> do
     setFontDescription lay fd
 
     setSourceRgb cairo 0 0 1
-    updateLayout cairo lay
+    -- updateLayout cairo lay
     showLayout cairo lay
 

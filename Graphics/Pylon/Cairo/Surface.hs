@@ -1,12 +1,10 @@
-module Graphics.Pylon.Cairo.Surface.SVG where
+module Graphics.Pylon.Cairo.Surface where
 
 import Foreign.C.String
 import Control.Exception
-import Graphics.Pylon.Foreign.Cairo.Surface.SVG
+import Graphics.Pylon.Foreign.Cairo.Surfaces
 import Graphics.Pylon.Foreign.Cairo.Surface
 import Graphics.Pylon.Foreign.Cairo.Types
-
-data SVG
 
 withSVGFile :: FilePath -> Double -> Double -> (Surface SVG -> IO a) -> IO a
 withSVGFile file w h = bracket

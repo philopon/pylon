@@ -15,15 +15,19 @@ cabal-version:       >=1.10
 library
   exposed-modules:     Graphics.Pylon.Foreign.Cairo.Cairo
                      , Graphics.Pylon.Foreign.Cairo.Path
+                     , Graphics.Pylon.Foreign.Cairo.Pattern
                      , Graphics.Pylon.Foreign.Cairo.Types
                      , Graphics.Pylon.Foreign.Cairo.Surface
-                     , Graphics.Pylon.Foreign.Cairo.Surface.SVG
+                     , Graphics.Pylon.Foreign.Cairo.Surfaces
+                     , Graphics.Pylon.Foreign.Cairo.Version
+
                      , Graphics.Pylon.Foreign.Pango.Layout
                      , Graphics.Pylon.Foreign.Pango.Cairo
                      , Graphics.Pylon.Foreign.Pango.Font
+
                      , Graphics.Pylon.Foreign.GObject
 
-                     , Graphics.Pylon.Cairo.Surface.SVG
+                     , Graphics.Pylon.Cairo.Surface
                      , Graphics.Pylon.Cairo.Cairo
                      , Graphics.Pylon.Cairo.Path
                      

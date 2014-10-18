@@ -4,61 +4,63 @@ module Graphics.Pylon.Foreign.Cairo.Cairo where
 
 import Foreign.Ptr
 import Foreign.C
-import Graphics.Pylon.Foreign.Cairo.Surface
+import Graphics.Pylon.Foreign.Cairo.Surface(Surface, Content)
+import Graphics.Pylon.Foreign.Cairo.Pattern(Pattern)
 import Graphics.Pylon.Foreign.Cairo.Types
+    (CairoStatus(..), CBool, UserDataSetter, UserDataGetter)
 
-newtype Cairo = Cairo (Ptr Cairo)
+newtype Cairo s = Cairo (Ptr (Cairo s))
 
 foreign import ccall cairo_create
-    :: Ptr Surface_ -> IO (Ptr Cairo)
+    :: Ptr (Surface s) -> IO (Ptr (Cairo s))
 
 foreign import ccall cairo_reference
-    :: Ptr Cairo -> IO (Ptr Cairo)
+    :: Ptr (Cairo s) -> IO (Ptr (Cairo s))
 
 foreign import ccall cairo_destroy
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO CairoStatus
 
 foreign import ccall cairo_status
-    :: Ptr Cairo -> IO (Ptr CairoStatus)
+    :: Ptr (Cairo s) -> IO (Ptr CairoStatus)
 
 foreign import ccall cairo_save
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_restore
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_get_target
-    :: Ptr Cairo -> IO (Ptr Surface_)
+    :: Ptr (Cairo s) -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_push_group
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_push_group_with_content
-    :: Ptr Cairo -> Ptr Content -> IO ()
+    :: Ptr (Cairo s) -> Ptr Content -> IO ()
 
 foreign import ccall cairo_pop_group
-    :: Ptr Cairo -> IO (Ptr Pattern)
+    :: Ptr (Cairo s) -> IO (Ptr Pattern)
 
 foreign import ccall cairo_pop_group_to_source
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_get_group_target
-    :: Ptr Cairo -> IO (Ptr Surface_)
+    :: Ptr (Cairo s) -> IO (Ptr (Surface s))
 
 foreign import ccall cairo_set_source_rgb
-    :: Ptr Cairo -> CDouble -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_set_source_rgba
-    :: Ptr Cairo -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_set_source
-    :: Ptr Cairo -> Ptr Pattern -> IO ()
+    :: Ptr (Cairo s) -> Ptr Pattern -> IO ()
 
 foreign import ccall cairo_set_source_surface
-    :: Ptr Cairo -> Ptr Pattern -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> Ptr Pattern -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_get_source
-    :: Ptr Cairo -> IO (Ptr Pattern)
+    :: Ptr (Cairo s) -> IO (Ptr Pattern)
 
 newtype Antialias = Antialias CInt
 #{ enum Antialias, Antialias
@@ -75,19 +77,19 @@ newtype Antialias = Antialias CInt
 
 
 foreign import ccall cairo_set_antialias
-    :: Ptr Cairo -> CInt -> IO ()
+    :: Ptr (Cairo s) -> Antialias -> IO ()
 
 foreign import ccall cairo_get_antialias
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO Antialias
 
 foreign import ccall cairo_set_dash
-    :: Ptr Cairo -> Ptr CDouble -> CInt -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> Ptr CDouble -> CInt -> CDouble -> IO ()
 
 foreign import ccall cairo_get_dash_count
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO CInt
 
 foreign import ccall cairo_get_dash
-    :: Ptr Cairo -> Ptr CDouble -> Ptr CDouble -> IO ()
+    :: Ptr (Cairo s) -> Ptr CDouble -> Ptr CDouble -> IO ()
 
 newtype FillRule = FillRule CInt
 #{ enum FillRule, FillRule
@@ -96,10 +98,10 @@ newtype FillRule = FillRule CInt
  }
 
 foreign import ccall cairo_set_fill_rule
-    :: Ptr Cairo -> CInt -> IO ()
+    :: Ptr (Cairo s) -> FillRule -> IO ()
 
 foreign import ccall cairo_get_fill_rule
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO FillRule
 
 newtype LineCap = LineCap CInt
 #{ enum LineCap, LineCap
@@ -108,12 +110,11 @@ newtype LineCap = LineCap CInt
  , lineCapSquare = CAIRO_LINE_CAP_SQUARE
  }
 
-
 foreign import ccall cairo_set_line_cap
-    :: Ptr Cairo -> CInt -> IO ()
+    :: Ptr (Cairo s) -> LineCap -> IO ()
 
 foreign import ccall cairo_get_line_cap
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO LineCap
 
 newtype LineJoin = LineJoin CInt
 #{ enum LineJoin, LineJoin
@@ -123,22 +124,22 @@ newtype LineJoin = LineJoin CInt
  }
 
 foreign import ccall cairo_set_line_join
-    :: Ptr Cairo -> CInt -> IO ()
+    :: Ptr (Cairo s) -> LineJoin -> IO ()
 
 foreign import ccall cairo_get_line_join
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO LineJoin
 
 foreign import ccall cairo_set_line_width
-    :: Ptr Cairo -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> IO ()
 
 foreign import ccall cairo_get_line_width
-    :: Ptr Cairo -> IO CDouble
+    :: Ptr (Cairo s) -> IO CDouble
 
 foreign import ccall cairo_set_mitter_limit
-    :: Ptr Cairo -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> IO ()
 
 foreign import ccall cairo_get_mitter_limit
-    :: Ptr Cairo -> IO CDouble
+    :: Ptr (Cairo s) -> IO CDouble
 
 newtype Operator = Operator CInt
 #{ enum Operator, Operator
@@ -179,87 +180,88 @@ newtype Operator = Operator CInt
 
 
 foreign import ccall cairo_set_operator
-    :: Ptr Cairo -> CInt -> IO ()
+    :: Ptr (Cairo s) -> Operator -> IO ()
 
 foreign import ccall cairo_get_operator
-    :: Ptr Cairo -> IO CInt
+    :: Ptr (Cairo s) -> IO Operator
 
 foreign import ccall cairo_set_tolerance
-    :: Ptr Cairo -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> IO ()
 
 foreign import ccall cairo_get_tolerance
-    :: Ptr Cairo -> IO CDouble
+    :: Ptr (Cairo s) -> IO CDouble
 
 foreign import ccall cairo_clip
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_clip_preserve
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_clip_extents
-    :: Ptr Cairo -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_in_clip
-    :: Ptr Cairo -> CDouble -> CDouble -> IO CBool
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> IO CBool
 
 foreign import ccall cairo_reset_clip
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
+-- TODO: RectangleList
 data RectangleList
 
 foreign import ccall cairo_rectangle_list_destroy
     :: Ptr RectangleList -> IO ()
 
 foreign import ccall cairo_copy_clip_rectangle_list
-    :: Ptr Cairo -> IO (Ptr RectangleList)
+    :: Ptr (Cairo s) -> IO (Ptr RectangleList)
 
 foreign import ccall cairo_fill
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_fill_preserve
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_fill_extents
-    :: Ptr Cairo -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_in_fill
-    :: Ptr Cairo -> CDouble -> CDouble -> IO CBool
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> IO CBool
 
 foreign import ccall cairo_mask
-    :: Ptr Cairo -> Ptr Pattern -> IO ()
+    :: Ptr (Cairo s) -> Ptr Pattern -> IO ()
 
 foreign import ccall cairo_mask_surface
-    :: Ptr Cairo -> Ptr Pattern -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> Ptr Pattern -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_paint
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_paint_with_alpha
-    :: Ptr Cairo -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> IO ()
 
 foreign import ccall cairo_stroke
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_stroke_preserve
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_stroke_extents
-    :: Ptr Cairo -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> CDouble -> CDouble -> IO ()
 
 foreign import ccall cairo_in_stroke
-    :: Ptr Cairo -> CDouble -> CDouble -> IO CBool
+    :: Ptr (Cairo s) -> CDouble -> CDouble -> IO CBool
 
 foreign import ccall cairo_copy_page
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_show_page
-    :: Ptr Cairo -> IO ()
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_get_reference_count
-    :: Ptr Cairo -> IO CUInt
+    :: Ptr (Cairo s) -> IO CUInt
 
 foreign import ccall cairo_set_user_data
-    :: UserDataSetter Cairo
+    :: UserDataSetter (Cairo s)
 
 foreign import ccall cairo_get_user_data
-    :: UserDataGetter Cairo
+    :: UserDataGetter (Cairo s)
