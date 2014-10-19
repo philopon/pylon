@@ -4,6 +4,7 @@ module Graphics.Pylon.Foreign.Cairo.Surface where
 
 import Foreign.Ptr
 import Foreign.C
+import Graphics.Pylon.Foreign.Cairo.Error
 import Graphics.Pylon.Foreign.Cairo.Types
 
 newtype Surface s = Surface (Ptr (Surface s))

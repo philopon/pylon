@@ -4,10 +4,11 @@ module Graphics.Pylon.Foreign.Cairo.Cairo where
 
 import Foreign.Ptr
 import Foreign.C
-import Graphics.Pylon.Foreign.Cairo.Surface(Surface, Content)
+import Graphics.Pylon.Foreign.Cairo.Surface(Surface, Content(..))
 import Graphics.Pylon.Foreign.Cairo.Pattern(Pattern)
 import Graphics.Pylon.Foreign.Cairo.Types
-    (CairoStatus(..), CBool, UserDataSetter, UserDataGetter)
+    (CBool, UserDataSetter, UserDataGetter)
+import Graphics.Pylon.Foreign.Cairo.Error (CairoStatus(..))
 
 newtype Cairo s = Cairo (Ptr (Cairo s))
 
@@ -18,10 +19,10 @@ foreign import ccall cairo_reference
     :: Ptr (Cairo s) -> IO (Ptr (Cairo s))
 
 foreign import ccall cairo_destroy
-    :: Ptr (Cairo s) -> IO CairoStatus
+    :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_status
-    :: Ptr (Cairo s) -> IO (Ptr CairoStatus)
+    :: Ptr (Cairo s) -> IO CairoStatus
 
 foreign import ccall cairo_save
     :: Ptr (Cairo s) -> IO ()
@@ -36,7 +37,7 @@ foreign import ccall cairo_push_group
     :: Ptr (Cairo s) -> IO ()
 
 foreign import ccall cairo_push_group_with_content
-    :: Ptr (Cairo s) -> Ptr Content -> IO ()
+    :: Ptr (Cairo s) -> Content -> IO ()
 
 foreign import ccall cairo_pop_group
     :: Ptr (Cairo s) -> IO (Ptr Pattern)

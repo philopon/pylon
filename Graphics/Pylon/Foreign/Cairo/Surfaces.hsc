@@ -7,6 +7,7 @@ import Foreign.C
 import Graphics.Pylon.Foreign.Cairo.Cairo
 import Graphics.Pylon.Foreign.Cairo.Surface
 import Graphics.Pylon.Foreign.Cairo.Types
+import Graphics.Pylon.Foreign.Cairo.Error
 
 #ifdef CAIRO_HAS_IMAGE_SURFACE
 data Image

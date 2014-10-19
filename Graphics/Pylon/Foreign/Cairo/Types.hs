@@ -3,9 +3,9 @@ module Graphics.Pylon.Foreign.Cairo.Types where
 
 import Foreign.C
 import Foreign.Ptr
+import Graphics.Pylon.Foreign.Cairo.Error
 
 type CBool = CInt
-newtype CairoStatus = CairoStatus CInt
 
 data Device
 data FontOptions

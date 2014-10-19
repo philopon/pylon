@@ -2,7 +2,7 @@ module Graphics.Pylon.Foreign.Cairo.Pattern where
 
 #include <cairo.h>
 
-import Graphics.Pylon.Foreign.Cairo.Types(CairoStatus(..))
+import Graphics.Pylon.Foreign.Cairo.Error(CairoStatus(..))
 import Foreign.ForeignPtr
 import Foreign.Ptr
 import Foreign.C

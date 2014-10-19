@@ -20,6 +20,7 @@ library
                      , Graphics.Pylon.Foreign.Cairo.Surface
                      , Graphics.Pylon.Foreign.Cairo.Surfaces
                      , Graphics.Pylon.Foreign.Cairo.Version
+                     , Graphics.Pylon.Foreign.Cairo.Error
 
                      , Graphics.Pylon.Foreign.Pango.Layout
                      , Graphics.Pylon.Foreign.Pango.Cairo
