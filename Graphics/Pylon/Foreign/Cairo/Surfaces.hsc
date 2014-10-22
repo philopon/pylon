@@ -155,7 +155,7 @@ newtype SVGVersion = SVGVersion CInt
  }
 
 foreign import ccall cairo_svg_surface_restrict_to_version
-    :: Ptr (Cairo s) -> SVGVersion -> IO ()
+    :: Ptr (Surface SVG) -> SVGVersion -> IO ()
 
 foreign import ccall cairo_svg_get_versions
     :: Ptr (Ptr SVGVersion) -> Ptr CInt -> IO ()

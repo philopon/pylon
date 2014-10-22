@@ -25,22 +25,39 @@ library
                      , Graphics.Pylon.Foreign.Pango.Layout
                      , Graphics.Pylon.Foreign.Pango.Cairo
                      , Graphics.Pylon.Foreign.Pango.Font
+                     , Graphics.Pylon.Foreign.Pango.Attribute
+                     , Graphics.Pylon.Foreign.Pango.TabStop
 
                      , Graphics.Pylon.Foreign.GObject
+                     , Graphics.Pylon.Foreign.GLib
 
-                     , Graphics.Pylon.Cairo.Surface
+                     , Graphics.Pylon.Binding.Cairo.Surface
+                     , Graphics.Pylon.Binding.Cairo.Cairo
+                     , Graphics.Pylon.Binding.Cairo.Path
+                     
+                     , Graphics.Pylon.Binding.Pango.Cairo
+                     , Graphics.Pylon.Binding.Pango.Layout
+                     , Graphics.Pylon.Binding.Pango.Font
+
+                     , Graphics.Pylon.Fusion
+                     , Graphics.Pylon.Types
+                     , Graphics.Pylon.Common
+
+                     , Graphics.Pylon.Pango.Font
+                     , Graphics.Pylon.Pango.Layout
+
                      , Graphics.Pylon.Cairo.Cairo
                      , Graphics.Pylon.Cairo.Path
-                     
-                     , Graphics.Pylon.Pango.Cairo
-                     , Graphics.Pylon.Pango.Layout
-                     , Graphics.Pylon.Pango.Font
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.8
                      , bytestring >=0.10 && <0.11
                      , text >=1.0 && <1.3
-  extra-libraries:     cairo, pango-1.0, pangocairo-1.0, gobject-2.0
+                     , transformers
+                     , reflection
+                     , data-default-class
+
+  extra-libraries:     cairo, pango-1.0, pangocairo-1.0, gobject-2.0, glib-2.0
   include-dirs:        /usr/local/include/cairo, /usr/local/include/pango-1.0, /usr/local/include/glib-2.0, /usr/local/lib/glib-2.0/include/
   -- hs-source-dirs:      
   build-tools:         hsc2hs

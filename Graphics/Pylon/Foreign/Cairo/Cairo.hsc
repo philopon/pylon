@@ -136,10 +136,10 @@ foreign import ccall cairo_set_line_width
 foreign import ccall cairo_get_line_width
     :: Ptr (Cairo s) -> IO CDouble
 
-foreign import ccall cairo_set_mitter_limit
+foreign import ccall cairo_set_miter_limit
     :: Ptr (Cairo s) -> CDouble -> IO ()
 
-foreign import ccall cairo_get_mitter_limit
+foreign import ccall cairo_get_miter_limit
     :: Ptr (Cairo s) -> IO CDouble
 
 newtype Operator = Operator CInt

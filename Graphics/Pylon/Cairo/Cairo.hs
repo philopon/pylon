@@ -1,30 +1,43 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE Rank2Types #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ExistentialQuantification #-}
+
 module Graphics.Pylon.Cairo.Cairo where
 
-import Control.Exception
+import Control.Applicative
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Reader
+
+import Graphics.Pylon.Foreign.Cairo.Cairo
+import Graphics.Pylon.Binding.Cairo.Cairo as C
 
 import Graphics.Pylon.Foreign.Cairo.Surface
-import Graphics.Pylon.Foreign.Cairo.Cairo
-import Graphics.Pylon.Foreign.Cairo.Types
-import Graphics.Pylon.Foreign.Cairo.Error
 
-withCairo :: Surface s -> (Cairo s -> IO b) -> IO b
-withCairo (Surface surf) = bracket bra
-    (\(Cairo c) -> cairo_destroy c)
-  where
-    bra = do
-        cairo <- cairo_create surf
-        st    <- cairo_status cairo
-        if st == statusSuccess
-            then return $ Cairo cairo
-            else throwIO st
+import Graphics.Pylon.Types
 
-setSourceRgb :: Cairo s -> Double -> Double -> Double -> IO ()
-setSourceRgb (Cairo c) r g b =
-    cairo_set_source_rgb c (realToFrac r) (realToFrac g) (realToFrac b)
+import Data.Reflection
 
-setSourceRgba :: Cairo s -> Double -> Double -> Double -> Double -> IO ()
-setSourceRgba (Cairo c) r g b a =
-    cairo_set_source_rgba c (realToFrac r) (realToFrac g) (realToFrac b) (realToFrac a)
+data CairoW = forall s. CairoW (Cairo s)
 
-fill :: Cairo s -> IO ()
-fill (Cairo c) = cairo_fill c
+newtype Render s a = Render { unRender :: ReaderT (Cairo s) IO a}
+    deriving (Functor, Applicative, Monad, MonadIO)
+
+renderWith :: Surface s -> (Given CairoW => Render s a) -> IO a
+renderWith s m = withCairo s $ \c ->
+    give (CairoW c) $ runReaderT (unRender m) c
+
+liftRender :: (Cairo s -> IO a) -> Render s a
+liftRender f = do
+    cxt <- Render ask
+    liftIO $ f cxt
+
+setSourceColor :: Color Double -> Render s ()
+setSourceColor c = do
+    cxt <- Render ask
+    liftIO $ case c of
+        RGB  r g b   -> setSourceRgb  cxt r g b
+        RGBA r g b a -> setSourceRgba cxt r g b a
+
+fill :: Render s ()
+fill = liftRender C.fill

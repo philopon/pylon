@@ -1,4 +1,4 @@
-module Graphics.Pylon.Cairo.Surface where
+module Graphics.Pylon.Binding.Cairo.Surface where
 
 import Foreign.Ptr
 import Foreign.C.String
@@ -22,3 +22,9 @@ withSVGFile file w h = bracket bra
         if st == statusSuccess
             then return $ Surface s
             else throwIO st
+
+svgSurfaceRestrictToVersion :: Surface SVG -> SVGVersion -> IO ()
+svgSurfaceRestrictToVersion (Surface s) v =
+    cairo_svg_surface_restrict_to_version s v
+
+
